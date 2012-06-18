@@ -1,0 +1,109 @@
+var mysql = require('mysql');
+var HOST = 'localhost';
+var PORT = 3306;
+var MYSQL_USER = 'root';
+var MYSQL_PASS = '';
+var DATABASE = 'mydb';
+
+var client = mysql.createClient({
+	host: HOST,
+	port: PORT,
+	user: MYSQL_USER,
+	password: MYSQL_PASS
+});
+client.query('use ' + DATABASE, function(err, result) {
+	if (err) {
+		throw err;
+	} else {
+		console.log("Database created" + result);
+	}
+});
+
+exports.home = function(req, res) {
+	res.redirect('/login');
+};
+
+exports.home_post_handler = function(req, res) {
+	// message will be displayed on console
+	console.log(req.body.message);
+
+	// send back the json of the message received via the textbox
+	res.json(req.body.message);
+	// OR
+	//res.send(200);// send 200 for server processing complete
+};
+
+exports.login = function(req, res) {
+
+	res.render('login', {
+		title: 'login to your system'
+	});
+};
+exports.signup = function(req, res) {
+	res.render('signup', {
+		title: 'signup new user'
+	});
+}
+exports.putdata = function(req, res) {
+	console.log(req.body.firstname);
+	var data = {
+		firstname: '',
+		lastname: ''
+	};
+	data.firstname = req.body.firstname;
+	data.lastname = req.body.lastname;
+	res.json(data);
+};
+
+exports.authenticate = function(req, res) {
+	if (req.body.txtLogin == req.body.txtPassword) {
+		var _guid = guidGenerator();
+		res.json(_guid);
+	}
+};
+
+function guidGenerator() {
+	var S4 = function() {
+			return (((1 + Math.random()) * 0x1000) | 0).toString(16).substring(1);
+		};
+	return (S4() + S4() + S4());
+}
+
+exports.insert = function(req, res) {
+	var _guid = guidGenerator();
+	client.query('INSERT INTO login (username,password,code) VALUES ("' + req.body.txtUser + '","' + req.body.txtPassword + '","' + _guid + '")', function(err, result) {
+		if (err) {
+			console.log("error in insertion:" + err.message);
+		}
+		else {
+			console.log("query executed");
+			res.json("ur unique id:" + _guid);
+		}
+
+	});
+}
+
+exports.message = function(req, res) {
+	res.render('message', {
+		title: 'ur message'
+	})
+}
+exports.display = function(req, res) {
+	console.log(req.body.txtmsg);
+
+	msg = req.body.txtmsg;
+	res.json(msg);
+}
+exports.select = function(req, res) {
+	client.query('SELECT * FROM login', function selectCb(err, results, fields) {
+		if (err) {
+			console.log("ERROR" + err.message);
+			throw err;
+		} else {
+			console.log("Got" + results.length + "ROWs:");
+			console.log(results);
+			console.log(fields);
+			res.json(results);
+		}
+	});
+}

@@ -1,0 +1,14 @@
+#container
+	#logo
+		img(src='/images/logo.png')
+	#display
+		#message
+			form(method='post')
+				| Enter your Command message
+				div
+					input(type='text', name='message')
+					input(type='submit', value='Send It')
+				div
+					|your unique code for desktop is 
+					=guid
+	include footer
