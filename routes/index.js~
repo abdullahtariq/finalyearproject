@@ -56,7 +56,6 @@ exports.putdata = function(req, res) {
 };
 
 exports.authenticate = function(req, res) {
-	
 	 client.query("SELECT * FROM login Where username='"+ req.body.txtLogin + "'" +" AND  password='"+req.body.txtPassword+"';",
 	function(err,results,fields){
 		if(err){throw err};
@@ -67,10 +66,9 @@ exports.authenticate = function(req, res) {
 			
 			res.redirect('/message');
 			}
-			else {
-				res.redirect(/wrong);
-			}
+			
 		});
+	}
 };
 
 function guidGenerator() {
@@ -127,6 +125,6 @@ exports.select = function(req, res) {
 	});
 }
 
-exports.wrong = function(req , res){
+export.wrong = function(req , res){
 		res.send("Wrong Password Or User Name ");
 	}
