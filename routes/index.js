@@ -68,7 +68,7 @@ exports.authenticate = function(req, res) {
 			res.redirect('/message');
 			}
 			else {
-				res.redirect(/wrong);
+				res.redirect('/wrong');
 			}
 		});
 };
