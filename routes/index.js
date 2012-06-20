@@ -64,7 +64,8 @@ exports.authenticate = function(req, res) {
 			console.log("Loged In");  
 			req.session.userInfo = results[0];
 			req.session.is_logged_in = true;
-			
+			console.log(results[0].id);
+
 			res.redirect('/message');
 			}
 			else {
@@ -97,6 +98,7 @@ exports.insert = function(req, res) {
 exports.message = function(req, res) {
 	if(req.session.is_logged_in === true){
 		console.log(req.session.is_logged_in);
+	
 		res.render('message',{
 		title:'ur message'
 	});
@@ -108,13 +110,15 @@ exports.message = function(req, res) {
 	}
 }
 exports.display = function(req, res) {
-	console.log(req.body.txtmsg);
+		
 
+	console.log(req.body.txtmsg);
+	client.query('INSERT INTO commands (code,command_text) VALUES ("' + req.session.userInfo.id + '","' + req.body.txtmsg + '")');
 	msg = req.body.txtmsg;
 	res.json(msg);
 }
 exports.select = function(req, res) {
-	client.query('SELECT * FROM login', function selectCb(err, results, fields) {
+	client.query('SELECT * FROM commands', function selectCb(err, results, fields) {
 		if (err) {
 			console.log("ERROR" + err.message);
 			throw err;
