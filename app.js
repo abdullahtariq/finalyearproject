@@ -55,7 +55,7 @@ app.post('/insert', routes.insert);
 app.get('/message', routes.message);
 app.post('/display', routes.display);
 app.get('/select', routes.select);
-app.get('/wrong',routes.wrong); // Not routing 
+app.get('/wrong',routes.wrong);
 // Routes
 app.get('/', routes.home);
 
