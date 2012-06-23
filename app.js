@@ -46,7 +46,7 @@ app.configure('production', function() {
   app.use(express.errorHandler());
 });
 
-
+// Routes
 app.post('/authenticate', routes.authenticate);
 
 app.get('/login', routes.login);
@@ -56,14 +56,15 @@ app.get('/message', routes.message);
 app.post('/display', routes.display);
 app.get('/select', routes.select);
 app.get('/wrong',routes.wrong);
-// Routes
+app.get('/querymessage',routes.querymessage);
+app.post('/query',routes.query);
 app.get('/', routes.home);
 
 app.post('/', routes.home_post_handler);
 
 app.post('/putdata', routes.putdata);
 
-
+// Server 
 app.listen(3000, function() {
   console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
 });

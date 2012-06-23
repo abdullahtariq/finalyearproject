@@ -64,7 +64,7 @@ exports.authenticate = function(req, res) {
 			console.log("Loged In");  
 			req.session.userInfo = results[0];
 			req.session.is_logged_in = true;
-			console.log(results[0].id);
+			console.log(results[0].code);
 
 			res.redirect('/message');
 			}
@@ -109,11 +109,13 @@ exports.message = function(req, res) {
 		
 	}
 }
+
+
 exports.display = function(req, res) {
 		
 
 	console.log(req.body.txtmsg);
-	client.query('INSERT INTO commands (code,command_text) VALUES ("' + req.session.userInfo.id + '","' + req.body.txtmsg + '")');
+	client.query('INSERT INTO commands (code,command_text) VALUES ("' + req.session.userInfo.code + '","' + req.body.txtmsg + '")');
 	msg = req.body.txtmsg;
 	res.json(msg);
 }
@@ -134,3 +136,22 @@ exports.select = function(req, res) {
 exports.wrong = function(req , res){
 		res.send("Wrong Password Or User Name ");
 	}
+exports.querymessage = function(req,res){
+	
+	res.render('querymessage', {
+		title: 'query to get the command'
+	});
+	
+}
+exports.query = function(req,res){
+	client.query("SELECT * FROM commands WHERE code='"+ req.body.txtQuery+"';",
+	function(err,results,fields){
+		if(err){
+			console.log("ERROR:"+err.message);		
+			}
+			if(results[0]){
+				console.log(results[0].command_text);
+				res.json(results[0].command_text);
+			}
+	} )
+}
