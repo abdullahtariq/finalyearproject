@@ -1,3 +1,5 @@
+var dateFormat = require('dateformat');
+var now = new Date(); 
 var mysql = require('mysql');
 var HOST = 'localhost';
 var PORT = 3306;
@@ -56,7 +58,9 @@ exports.putdata = function(req, res) {
 };
 
 exports.authenticate = function(req, res) {
-	
+	//client.query("SELECT * FROM login WHERE username='yawar' AND password='shah' ",
+	console.log("username:"+req.body.txtLogin);
+	console.log("password:"+req.body.txtPassword);
 	 client.query("SELECT * FROM login Where username='"+ req.body.txtLogin + "'" +" AND  password='"+req.body.txtPassword+"';",
 	function(err,results,fields){
 		if(err){throw err};
@@ -65,8 +69,8 @@ exports.authenticate = function(req, res) {
 			req.session.userInfo = results[0];
 			req.session.is_logged_in = true;
 			console.log(results[0].code);
-
-			res.redirect('/message');
+			res.json(results[0].code);
+			//res.redirect('/message');
 			}
 			else {
 				res.redirect('/wrong');
@@ -99,15 +103,14 @@ exports.message = function(req, res) {
 	if(req.session.is_logged_in === true){
 		console.log(req.session.is_logged_in);
 	
-		res.render('message',{
+	res.render('message',{
 		title:'ur message'
 	});
 	
 	}
 	else {
 		res.redirect('/wrong');
-		
-	}
+		}
 }
 
 
@@ -120,7 +123,7 @@ exports.display = function(req, res) {
 	res.json(msg);
 }
 exports.select = function(req, res) {
-	client.query('SELECT * FROM commands', function selectCb(err, results, fields) {
+	client.query('SELECT * FROM login', function selectCb(err, results, fields) {
 		if (err) {
 			console.log("ERROR" + err.message);
 			throw err;
@@ -131,10 +134,12 @@ exports.select = function(req, res) {
 			res.json(results);
 		}
 	});
+	
+	//console.log(time);
 }
 
 exports.wrong = function(req , res){
-		res.send("Wrong Password Or User Name ");
+		res.json("Wrong Password Or User Name ");
 	}
 exports.querymessage = function(req,res){
 	
@@ -144,6 +149,8 @@ exports.querymessage = function(req,res){
 	
 }
 exports.query = function(req,res){
+	var time = timeGenerator();
+	client.query("UPDATE commands SET query_send='"+time+"' WHERE code='"+req.body.txtQuery+"';");
 	client.query("SELECT * FROM commands WHERE code='"+ req.body.txtQuery+"';",
 	function(err,results,fields){
 		if(err){
@@ -154,4 +161,8 @@ exports.query = function(req,res){
 				res.json(results[0].command_text);
 			}
 	} )
+}
+function timeGenerator(){
+	var _time =dateFormat(now,"dddd, mmmm dS, yyyy, h:MM:ss TT");
+	return _time;
 }
