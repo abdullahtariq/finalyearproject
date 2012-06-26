@@ -58,21 +58,25 @@ exports.putdata = function(req, res) {
 };
 
 exports.authenticate = function(req, res) {
-	//client.query("SELECT * FROM login WHERE username='yawar' AND password='shah' ",
-	console.log("username:"+req.body.txtLogin);
-	console.log("password:"+req.body.txtPassword);
-	 client.query("SELECT * FROM login Where username='"+ req.body.txtLogin + "'" +" AND  password='"+req.body.txtPassword+"';",
+		
+		console.log("username:"+req.body.txtLogin);
+		console.log("password:"+req.body.txtPassword); 
+	client.query("SELECT * FROM login WHERE username='yawar' AND password='shah' ",
+	
+	 //lient.query("SELECT * FROM login Where username='"+ req.body.txtLogin + "'" +" AND  password='"+req.body.txtPassword+"';",
 	function(err,results,fields){
 		if(err){throw err};
 		if(results[0]){
-			console.log("Loged In");  
-			req.session.userInfo = results[0];
+			console.log("Loged In"); 
+		
+				req.session.userInfo = results[0];
 			req.session.is_logged_in = true;
 			console.log(results[0].code);
 			res.json(results[0].code);
 			//res.redirect('/message');
 			}
 			else {
+				console.log("wrong user password");
 				res.redirect('/wrong');
 			}
 		});
