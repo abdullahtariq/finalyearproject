@@ -58,7 +58,8 @@ exports.putdata = function(req, res) {
 };
 
 exports.authenticate = function(req, res) {
-		
+		// In console the value show as username: undefined password: undefined 
+		//when request generates from either clients i.e c# or Android
 		console.log("username:"+req.body.txtLogin);
 		console.log("password:"+req.body.txtPassword); 
 	//client.query("SELECT * FROM login WHERE username='yawar' AND password='shah' ",
