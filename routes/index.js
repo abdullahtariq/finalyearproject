@@ -61,9 +61,9 @@ exports.authenticate = function(req, res) {
 		
 		console.log("username:"+req.body.txtLogin);
 		console.log("password:"+req.body.txtPassword); 
-	client.query("SELECT * FROM login WHERE username='yawar' AND password='shah' ",
+	//client.query("SELECT * FROM login WHERE username='yawar' AND password='shah' ",
 	
-	 //lient.query("SELECT * FROM login Where username='"+ req.body.txtLogin + "'" +" AND  password='"+req.body.txtPassword+"';",
+	 client.query("SELECT * FROM login Where username='"+ req.body.txtLogin + "'" +" AND  password='"+req.body.txtPassword+"';",
 	function(err,results,fields){
 		if(err){throw err};
 		if(results[0]){
