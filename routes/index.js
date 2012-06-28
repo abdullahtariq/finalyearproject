@@ -58,20 +58,23 @@ exports.putdata = function(req, res) {
 };
 
 exports.authenticate = function(req, res) {
-		
+		console.log("imei code: "+req.body.imeiCode);
 		console.log("username:"+req.body.txtLogin);
 		console.log("password:"+req.body.txtPassword); 
-	client.query("SELECT * FROM login WHERE username='yawar' AND password='shah' ",
-	
-	 //lient.query("SELECT * FROM login Where username='"+ req.body.txtLogin + "'" +" AND  password='"+req.body.txtPassword+"';",
+	//client.query("SELECT * FROM login WHERE username='yawar' AND password='shah' ",
+	client.query("UPDATE login SET imei='"+req.body.imeiCode+"' WHERE username='"+req.body.txtLogin+"'" +"AND password='"+req.body.txtPassword+"';");
+	 client.query("SELECT * FROM login Where username='"+req.body.txtLogin+ "'" +" AND  password='"+req.body.txtPassword+"';",
 	function(err,results,fields){
 		if(err){throw err};
 		if(results[0]){
 			console.log("Loged In"); 
 		
-				req.session.userInfo = results[0];
+			req.session.userInfo = results[0];
+			console.log(req.session.userInfo);
 			req.session.is_logged_in = true;
+			
 			console.log(results[0].code);
+			
 			res.json(results[0].code);
 			//res.redirect('/message');
 			}
@@ -90,8 +93,10 @@ function guidGenerator() {
 }
 
 exports.insert = function(req, res) {
+	console.log("imei code"+req.body.imeiCode);
 	var _guid = guidGenerator();
-	client.query('INSERT INTO login (username,password,code) VALUES ("' + req.body.txtUser + '","' + req.body.txtPassword + '","' + _guid + '")', function(err, result) {
+
+	client.query('INSERT INTO login (username,password,code,imei) VALUES ("' + req.body.txtUser + '","' + req.body.txtPassword + '","' + _guid + '","'+req.body.imeiCode+'")', function(err, result) {
 		if (err) {
 			console.log("error in insertion:" + err.message);
 		}
@@ -120,9 +125,10 @@ exports.message = function(req, res) {
 
 exports.display = function(req, res) {
 		
-
-	console.log(req.body.txtmsg);
-	client.query('INSERT INTO commands (code,command_text) VALUES ("' + req.session.userInfo.code + '","' + req.body.txtmsg + '")');
+	console.log("message:"+req.body.txtmsg);
+	console.log("unique code:"+ req.body.txtcode);
+	
+	client.query('INSERT INTO commands (code,command_text) VALUES ("' + req.body.txtcode + '","' + req.body.txtmsg + '")');
 	msg = req.body.txtmsg;
 	res.json(msg);
 }
@@ -154,13 +160,16 @@ exports.querymessage = function(req,res){
 }
 exports.query = function(req,res){
 	var time = timeGenerator();
-	client.query("UPDATE commands SET query_send='"+time+"' WHERE code='"+req.body.txtQuery+"';");
-	client.query("SELECT * FROM commands WHERE code='"+ req.body.txtQuery+"';",
+	console.log(req.body.txtQuery);
+	//client.query("UPDATE commands SET query_send='"+time+"' WHERE code='"+req.body.txtQuery+"';");
+	client.query("SELECT command_text FROM commands WHERE id=(SELECT MAX(id) FROM commands WHERE'"+req.body.txtQuery+"');",
 	function(err,results,fields){
 		if(err){
 			console.log("ERROR:"+err.message);		
 			}
+
 			if(results[0]){
+				console.log(fields);
 				console.log(results[0].command_text);
 				res.json(results[0].command_text);
 			}

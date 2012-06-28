@@ -5,14 +5,6 @@
 var express = require('express')
 var routes = require('./routes');
 var mysql = require('mysql');
-var client = mysql.createClient({
-  host: 'localhost',
-  port: 3307,
-  user: 'root',
-  password: '',
-  database: 'mydb',
-  table: 'login'
-});
 
 var app = module.exports = express.createServer();
 
@@ -59,11 +51,6 @@ app.get('/wrong',routes.wrong);
 app.get('/querymessage',routes.querymessage);
 app.post('/query',routes.query);
 app.get('/', routes.home);
-
-app.post('/', routes.home_post_handler);
-
-app.post('/putdata', routes.putdata);
-
 // Server
 var port = process.env.PORT || 3000; 
 app.listen(port, function() {

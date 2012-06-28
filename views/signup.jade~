@@ -7,6 +7,4 @@ center
 			|Password:
 			input(name="txtPassword", type="password")
 			br
-			input(name="imeiCode", type="text")
-			br
 			input(type="submit", value="SignUp")

@@ -2,6 +2,6 @@ center
 	div(id="querybox")
 		form(name="querytext", method="post", action="/query")
 			|Unique id
-			input(name="txtQuery",type="text")
+			input(type="text", name="txtQuery")
 			br
 			input(type="submit",value="send") 
