@@ -1,10 +1,10 @@
 var dateFormat = require('dateformat');
 var now = new Date(); 
 var mysql = require('mysql');
-var HOST = 'localhost';
-var PORT = 3306;
-var MYSQL_USER = 'root';
-var MYSQL_PASS = '';
+var HOST = 'instance19594.db.xeround.com';
+var PORT = 9822;
+var MYSQL_USER = 'fahad';
+var MYSQL_PASS = 'root';
 var DATABASE = 'mydb';
 
 var client = mysql.createClient({
@@ -132,6 +132,7 @@ exports.display = function(req, res) {
 	msg = req.body.txtmsg;
 	res.json(msg);
 }
+
 exports.select = function(req, res) {
 	client.query('SELECT * FROM login', function selectCb(err, results, fields) {
 		if (err) {
@@ -161,7 +162,7 @@ exports.querymessage = function(req,res){
 exports.query = function(req,res){
 	var time = timeGenerator();
 	console.log(req.body.txtQuery);
-	//client.query("UPDATE commands SET query_send='"+time+"' WHERE code='"+req.body.txtQuery+"';");
+	client.query("UPDATE commands SET query_send='"+time+"' WHERE code='"+req.body.txtQuery+"';");
 	client.query("SELECT command_text FROM commands WHERE id=(SELECT MAX(id) FROM commands WHERE'"+req.body.txtQuery+"');",
 	function(err,results,fields){
 		if(err){
