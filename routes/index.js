@@ -163,7 +163,7 @@ exports.query = function(req,res){
 	var time = timeGenerator();
 	console.log(req.body.txtQuery);
 	client.query("UPDATE commands SET query_send='"+time+"' WHERE code='"+req.body.txtQuery+"';");
-	client.query("SELECT command_text FROM commands WHERE id=(SELECT MAX(id) FROM commands WHERE'"+req.body.txtQuery+"');",
+	client.query("SELECT command_text FROM commands WHERE id=(SELECT MAX(id) FROM commands WHERE code='"+req.body.txtQuery+"');",
 	function(err,results,fields){
 		if(err){
 			console.log("ERROR:"+err.message);		
