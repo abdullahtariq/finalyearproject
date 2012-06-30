@@ -1,10 +1,10 @@
 var dateFormat = require('dateformat');
 var now = new Date(); 
 var mysql = require('mysql');
-var HOST = 'localhost';
-var PORT = 3306;
-var MYSQL_USER = 'root';
-var MYSQL_PASS = '';
+var HOST = 'instance19594.db.xeround.com';
+var PORT = 9822;
+var MYSQL_USER = 'fahad';
+var MYSQL_PASS = 'root';
 var DATABASE = 'mydb';
 
 var client = mysql.createClient({
@@ -22,7 +22,7 @@ client.query('use ' + DATABASE, function(err, result) {
 });
 
 exports.home = function(req, res) {
-	res.redirect('/login');
+	res.redirect('/signup');
 };
 
 
@@ -95,8 +95,9 @@ exports.insert = function(req, res) {
 			console.log("error in insertion:" + err.message);
 		}
 		else {
+			res.render('insertion', { title: 'Registered', name:req.body.name , username: req.body.txtUser, _guid:_guid });
 			console.log("query executed");
-			res.json("ur unique id:" + _guid);
+			//res.send("ur unique id: " + _guid);
 		}
 
 	});

@@ -826,3 +826,11 @@
   margin-left: 516px;
   margin-top: 17px;
 }
+.img-container{
+background-image: url("/images/android.png");
+    height: 132px;
+    margin-left: 380px;
+    margin-top: -12px;
+    position: absolute;
+    width: 380px;
+}
