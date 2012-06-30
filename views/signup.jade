@@ -1,12 +1,34 @@
-center
-	div(id="loginbox")
-		form(name="frmsignup", action="/insert", method="post")
-			|Username:
-			input(name="txtUser", type="text")
-			br
-			|Password:
-			input(name="txtPassword", type="password")
-			br
-			input(name="imeiCode", type="text")
-			br
-			input(type="submit", value="SignUp")
+.container
+    .row
+        .image-container
+        .span8
+          form#registerHere.form-horizontal(method='post', action='/insert')
+            fieldset
+              legend Registration
+              .control-group
+                label.control-label Name
+                .controls
+                  input#name.input-xlarge(type='text', name='name', rel='popover', data-content='Enter your first and last name.', data-original-title='Full name')
+              .control-group
+                label.control-label User Name
+                .controls
+                  input#txtUser.input-xlarge(type='text', name='txtUser', rel='popover', data-content='Enter Valid User (alphabet Only)', data-original-title='User Name')
+              .control-group
+                label.control-label Password
+                .controls
+                  input#txtPassword.input-xlarge(type='password', name='txtPassword', rel='popover', data-content='Enter Password at least 6 digits', data-original-title='Password')
+              .control-group
+                label.control-label
+                .controls
+                  button.btn.btn-sucess(type='submit') Create My Account
+    script(src='http://twitter.github.com/bootstrap/assets/js/jquery.js')
+    script(src='http://twitter.github.com/bootstrap/assets/js/bootstrap-transition.js')
+    script(src='http://twitter.github.com/bootstrap/assets/js/bootstrap-alert.js')
+    script(src='http://twitter.github.com/bootstrap/assets/js/bootstrap-modal.js')
+    script(src='http://twitter.github.com/bootstrap/assets/js/bootstrap-dropdown.js')
+    script(src='http://twitter.github.com/bootstrap/assets/js/bootstrap-scrollspy.js')
+    script(src='http://twitter.github.com/bootstrap/assets/js/bootstrap-tab.js')
+    script(src='http://twitter.github.com/bootstrap/assets/js/bootstrap-tooltip.js')
+    script(src='http://twitter.github.com/bootstrap/assets/js/bootstrap-popover.js')
+    script(type='text/javascript', src='http://jzaefferer.github.com/jquery-validation/jquery.validate.js')
+    script(type='text/javascript', src='javascripts/my.js')

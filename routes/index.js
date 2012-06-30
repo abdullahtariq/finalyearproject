@@ -1,10 +1,10 @@
 var dateFormat = require('dateformat');
 var now = new Date(); 
 var mysql = require('mysql');
-var HOST = 'instance19594.db.xeround.com';
-var PORT = 9822;
-var MYSQL_USER = 'fahad';
-var MYSQL_PASS = 'root';
+var HOST = 'localhost';
+var PORT = 3306;
+var MYSQL_USER = 'root';
+var MYSQL_PASS = '';
 var DATABASE = 'mydb';
 
 var client = mysql.createClient({
@@ -25,15 +25,6 @@ exports.home = function(req, res) {
 	res.redirect('/login');
 };
 
-exports.home_post_handler = function(req, res) {
-	// message will be displayed on console
-	console.log(req.body.message);
-
-	// send back the json of the message received via the textbox
-	res.json(req.body.message);
-	// OR
-	//res.send(200);// send 200 for server processing complete
-};
 
 exports.login = function(req, res) {
 
@@ -65,7 +56,10 @@ exports.authenticate = function(req, res) {
 	client.query("UPDATE login SET imei='"+req.body.imeiCode+"' WHERE username='"+req.body.txtLogin+"'" +"AND password='"+req.body.txtPassword+"';");
 	 client.query("SELECT * FROM login Where username='"+req.body.txtLogin+ "'" +" AND  password='"+req.body.txtPassword+"';",
 	function(err,results,fields){
-		if(err){throw err};
+		if(err){
+			throw err;
+				//client.query("SELECT * FROM login Where username='"+req.body.txtLogin+ "'" +" AND  password='"+req.body.txtPassword+"';");
+		}
 		if(results[0]){
 			console.log("Loged In"); 
 		
@@ -93,10 +87,10 @@ function guidGenerator() {
 }
 
 exports.insert = function(req, res) {
-	console.log("imei code"+req.body.imeiCode);
+	
 	var _guid = guidGenerator();
 
-	client.query('INSERT INTO login (username,password,code,imei) VALUES ("' + req.body.txtUser + '","' + req.body.txtPassword + '","' + _guid + '","'+req.body.imeiCode+'")', function(err, result) {
+	client.query('INSERT INTO login (name,username,password,code) VALUES ("'+req.body.name+'","' + req.body.txtUser + '","' + req.body.txtPassword + '","' + _guid + '")', function(err, result) {
 		if (err) {
 			console.log("error in insertion:" + err.message);
 		}
@@ -124,11 +118,11 @@ exports.message = function(req, res) {
 
 
 exports.display = function(req, res) {
-		
+		var time = timeGenerator();
 	console.log("message:"+req.body.txtmsg);
 	console.log("unique code:"+ req.body.txtcode);
 	
-	client.query('INSERT INTO commands (code,command_text) VALUES ("' + req.body.txtcode + '","' + req.body.txtmsg + '")');
+	client.query('INSERT INTO commands (code,command_text,query_send) VALUES ("' + req.body.txtcode + '","' + req.body.txtmsg + '","'+time+'")');
 	msg = req.body.txtmsg;
 	res.json(msg);
 }
@@ -160,10 +154,8 @@ exports.querymessage = function(req,res){
 	
 }
 exports.query = function(req,res){
-	var time = timeGenerator();
 	console.log(req.body.txtQuery);
-	client.query("UPDATE commands SET query_send='"+time+"' WHERE code='"+req.body.txtQuery+"';");
-	client.query("SELECT command_text FROM commands WHERE id=(SELECT MAX(id) FROM commands WHERE code='"+req.body.txtQuery+"');",
+	client.query("SELECT command_text , id FROM commands WHERE id=(SELECT MAX(id) FROM commands WHERE code='"+req.body.txtQuery+"');",
 	function(err,results,fields){
 		if(err){
 			console.log("ERROR:"+err.message);		
@@ -172,10 +164,36 @@ exports.query = function(req,res){
 			if(results[0]){
 				console.log(fields);
 				console.log(results[0].command_text);
-				res.json(results[0].command_text);
+				console.log(results[0].id);
+				//res.json(results[0].command_textid);
+				var cmd ={
+					command_text:results[0].command_text,
+					id:results[0].id
+				};
+				res.json(cmd);
+
 			}
-	} )
+	} );
 }
+exports.status = function(req,res){
+	res.render('status', {
+		title: 'Status From Client Desktop'
+	});
+}
+exports.done = function(req,res){
+		var time = timeGenerator();
+	client.query("UPDATE commands SET status='"+req.body.done+"', query_execute='"+time+"'  WHERE id='"+req.body.txtQuery+"';",function(err,results){
+		if(err)
+		{
+			console.log("ERROR: "+ err.message);
+		}
+		else
+		{
+			console.log("Status Updated");
+		}
+	});
+}
+
 function timeGenerator(){
 	var _time =dateFormat(now,"dddd, mmmm dS, yyyy, h:MM:ss TT");
 	return _time;

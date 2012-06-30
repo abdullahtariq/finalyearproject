@@ -40,7 +40,6 @@ app.configure('production', function() {
 
 // Routes
 app.post('/authenticate', routes.authenticate);
-
 app.get('/login', routes.login);
 app.get('/signup', routes.signup);
 app.post('/insert', routes.insert);
@@ -51,6 +50,10 @@ app.get('/wrong',routes.wrong);
 app.get('/querymessage',routes.querymessage);
 app.post('/query',routes.query);
 app.get('/', routes.home);
+//requesting & setting status
+app.get('/status',routes.status);
+app.post('/done',routes.done);
+
 // Server
 var port = process.env.PORT || 3001; 
 app.listen(port, function() {
