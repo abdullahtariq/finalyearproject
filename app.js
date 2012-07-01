@@ -51,9 +51,10 @@ app.get('/querymessage',routes.querymessage);
 app.post('/query',routes.query);
 app.get('/', routes.home);
 //requesting & setting status
-app.get('/status',routes.status);
+app.get('/stats',routes.stats);
 app.post('/done',routes.done);
-
+app.get('/mobstatus',routes.mobstatus);
+app.post('/report',routes.report);
 // Server
 var port = process.env.PORT || 3001; 
 app.listen(port, function() {

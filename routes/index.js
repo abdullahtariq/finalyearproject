@@ -1,10 +1,10 @@
 var dateFormat = require('dateformat');
 var now = new Date(); 
 var mysql = require('mysql');
-var HOST = 'instance19594.db.xeround.com';
-var PORT = 9822;
-var MYSQL_USER = 'fahad';
-var MYSQL_PASS = 'root';
+var HOST = 'localhost';
+var PORT = 3306;
+var MYSQL_USER = 'root';
+var MYSQL_PASS = '';
 var DATABASE = 'mydb';
 
 var client = mysql.createClient({
@@ -120,16 +120,26 @@ exports.message = function(req, res) {
 
 exports.display = function(req, res) {
 		var time = timeGenerator();
+		var prog = "Inprogress"
 	console.log("message:"+req.body.txtmsg);
 	console.log("unique code:"+ req.body.txtcode);
 	
-	client.query('INSERT INTO commands (code,command_text,query_send) VALUES ("' + req.body.txtcode + '","' + req.body.txtmsg + '","'+time+'")');
+
+	client.query('INSERT INTO commands (code,command_text,query_send,status) VALUES ("' + req.body.txtcode + '","' + req.body.txtmsg + '","'+time+'","'+prog+'")',
+		function(err,results,fields){
+		if(err){
+			conosle.log("ERROR:"+err.message);
+		}
+		else{
+			console.log("data inserted")
+		}
+	});
 	msg = req.body.txtmsg;
 	res.json(msg);
 }
 
 exports.select = function(req, res) {
-	client.query('SELECT * FROM login', function selectCb(err, results, fields) {
+	client.query('SELECT * FROM commands', function selectCb(err, results, fields) {
 		if (err) {
 			console.log("ERROR" + err.message);
 			throw err;
@@ -154,9 +164,10 @@ exports.querymessage = function(req,res){
 	});
 	
 }
+//DEsktop Client Request FOR commands
 exports.query = function(req,res){
 	console.log(req.body.txtQuery);
-	client.query("SELECT command_text , id FROM commands WHERE id=(SELECT MAX(id) FROM commands WHERE code='"+req.body.txtQuery+"');",
+	client.query("SELECT command_text , id , status FROM commands WHERE id=(SELECT MAX(id) FROM commands WHERE code='"+req.body.txtQuery+"');",
 	function(err,results,fields){
 		if(err){
 			console.log("ERROR:"+err.message);		
@@ -166,21 +177,31 @@ exports.query = function(req,res){
 				console.log(fields);
 				console.log(results[0].command_text);
 				console.log(results[0].id);
+				console.log(results[0].status);
 				//res.json(results[0].command_textid);
 				var cmd ={
 					command_text:results[0].command_text,
 					id:results[0].id
 				};
+				if(results[0].status == 'true'){
+					console.log("Query executed");
+				}
+				else{
+				console.log("Send Command to Horvath");
 				res.json(cmd);
-
+					
+				}
+				
+			
 			}
 	} );
 }
-exports.status = function(req,res){
-	res.render('status', {
+exports.stats = function(req,res){
+	res.render('stats', {
 		title: 'Status From Client Desktop'
 	});
 }
+//REQUEST FROM CLIENT PC
 exports.done = function(req,res){
 		var time = timeGenerator();
 	client.query("UPDATE commands SET status='"+req.body.done+"', query_execute='"+time+"'  WHERE id='"+req.body.txtQuery+"';",function(err,results){
@@ -194,7 +215,27 @@ exports.done = function(req,res){
 		}
 	});
 }
-
+exports.mobstatus = function(req,res){
+	res.render('mobstatus',{
+		title: 'Status from Mobile'
+	});
+}
+//REQUEST FROM CLIENT MOBILE
+exports.report = function(req,res){
+	console.log("COde :"+req.body.txtcode);
+	client.query("SELECT status FROM commands WHERE id=(SELECT MAX(id) FROM commands WHERE code='"+req.body.txtcode+"');",
+	function(err,results,fields){
+		if(err){
+			console.log("ERROR: "+message.err);
+		}
+		if(results[0]){
+			console.log(fields);
+			console.log(results[0].status);
+			res.json(results[0].status);
+		}
+		
+	} );
+}
 function timeGenerator(){
 	var _time =dateFormat(now,"dddd, mmmm dS, yyyy, h:MM:ss TT");
 	return _time;
