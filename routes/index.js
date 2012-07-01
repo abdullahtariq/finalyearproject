@@ -1,10 +1,10 @@
 var dateFormat = require('dateformat');
 var now = new Date(); 
 var mysql = require('mysql');
-var HOST = 'localhost';
-var PORT = 3306;
-var MYSQL_USER = 'root';
-var MYSQL_PASS = '';
+var HOST = 'instance19594.db.xeround.com';
+var PORT = 9822;
+var MYSQL_USER = 'fahad';
+var MYSQL_PASS = 'root';
 var DATABASE = 'mydb';
 
 var client = mysql.createClient({
