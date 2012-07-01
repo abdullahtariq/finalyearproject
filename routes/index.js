@@ -185,6 +185,7 @@ exports.query = function(req,res){
 				};
 				if(results[0].status == 'true'){
 					console.log("Query executed");
+					res.json("Waiting!");
 				}
 				else{
 				console.log("Send Command to Horvath");
