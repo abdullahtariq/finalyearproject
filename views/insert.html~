@@ -1,0 +1,9 @@
+.container
+    .row
+        .span8
+          label Name:
+          br
+          label User Name:
+          br
+          label Unique ID:
+

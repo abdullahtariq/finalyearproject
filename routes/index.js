@@ -123,9 +123,9 @@ exports.display = function(req, res) {
 		var prog = "Inprogress"
 	console.log("message:"+req.body.txtmsg);
 	console.log("unique code:"+ req.body.txtcode);
-	
+	console.log("filename : "+req.body.file)
 
-	client.query('INSERT INTO commands (code,command_text,query_send,status) VALUES ("' + req.body.txtcode + '","' + req.body.txtmsg + '","'+time+'","'+prog+'")',
+	client.query('INSERT INTO commands (code,command_text,filename,query_send,status) VALUES ("' + req.body.txtcode + '","' + req.body.txtmsg + '","'+req.body.file+'","'+time+'","'+prog+'")',
 		function(err,results,fields){
 		if(err){
 			conosle.log("ERROR:"+err.message);
@@ -167,7 +167,7 @@ exports.querymessage = function(req,res){
 //DEsktop Client Request FOR commands
 exports.query = function(req,res){
 	console.log(req.body.txtQuery);
-	client.query("SELECT command_text , id , status FROM commands WHERE id=(SELECT MAX(id) FROM commands WHERE code='"+req.body.txtQuery+"');",
+	client.query("SELECT command_text , id , status ,filename FROM commands WHERE id=(SELECT MAX(id) FROM commands WHERE code='"+req.body.txtQuery+"');",
 	function(err,results,fields){
 		if(err){
 			console.log("ERROR:"+err.message);		
@@ -178,10 +178,12 @@ exports.query = function(req,res){
 				console.log(results[0].command_text);
 				console.log(results[0].id);
 				console.log(results[0].status);
+				console.log(results[0].filename);
 				//res.json(results[0].command_textid);
 				var cmd ={
 					command_text:results[0].command_text,
-					id:results[0].id
+					id:results[0].id,
+					file:results[0].filename2
 				};
 				if(results[0].status == 'true'){
 					console.log("Query executed");
@@ -190,8 +192,7 @@ exports.query = function(req,res){
 				else{
 				console.log("Send Command to Horvath");
 				res.json(cmd);
-					
-				}
+					}
 				
 			
 			}

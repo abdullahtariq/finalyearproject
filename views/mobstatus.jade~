@@ -1,0 +1,7 @@
+center
+	div(id="loginbox")
+		form(name="frmLogin", action="/status", method="post")
+			|Code:
+			input(name="txtcode", type="text")
+			br
+			input(type="submit", value="login")

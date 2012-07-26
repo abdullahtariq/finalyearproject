@@ -1,0 +1,10 @@
+center
+	div(id="loginbox")
+		form(name="frmLogin", action="/authenticate", method="post")
+			|Username:
+			input(name="txtLogin", type="text")
+			br
+			|Password:
+			input(name="txtPassword", type="password")
+			br
+			input(type="submit", value="login")
