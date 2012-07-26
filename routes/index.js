@@ -49,6 +49,7 @@ exports.putdata = function(req, res) {
 };
 
 exports.authenticate = function(req, res) {
+
 		console.log("imei code: "+req.body.imeiCode);
 		console.log("username:"+req.body.txtLogin);
 		console.log("password:"+req.body.txtPassword); 
